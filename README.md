@@ -1,5 +1,7 @@
 Focus Carousel
 ===
+![キャプチャ](docs/capture.jpg "キャプチャ")
+
 ```
 Create : 2024-08-20
 Author : Yugeta.Koji
