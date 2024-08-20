@@ -44,7 +44,7 @@ Author : Yugeta.Koji
   
 
 # Demo
-https://yugeta.github.io/focus_carousel/
+https://yugeta.github.io/focus_carousel/src/
 
 
 # Update
