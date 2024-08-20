@@ -2,9 +2,11 @@
  * UUID
  * - unique-user-idの作成モジュール
  * - how-to
- *    new Uuid().make()
+ *   const uuid = new Uuid().make()
+ *   or
+ *   const uuid = new Uuid()
+ *   console.log(uuid.id)
  */
-
 
 export class Uuid{
 

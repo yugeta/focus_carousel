@@ -1,3 +1,7 @@
+/**
+ * Focus Carousel
+ */
+
 import { Uuid } from "./uuid.js"
 
 export class Carousel{
@@ -14,15 +18,18 @@ export class Carousel{
     })
   }
 
+  // 1ページ内のカルーセル領域の取得（エリア一覧）
   get elements(){
     return document.querySelectorAll(this.selector)
   }
 
+  // カルーセル内のアイテム一覧の取得
   get_items(carousel_area){
     if(!carousel_area){return []}
     return carousel_area.querySelectorAll(`:scope figure > *`)
   }
 
+  // 各種設定データの取得（登録）
   init(){
     for(const area of this.elements){
       const uuid = new Uuid().make()
@@ -44,10 +51,12 @@ export class Carousel{
     }
   }
 
+  // 登録済のデータから、対象エリアのデータを取得
   get_area_data(area){
     return this.areas.find(e => e.uuid === area.getAttribute("data-uuid"))
   }
 
+  // イベント登録
   set_event(){
     for(const area of this.elements){
       const figure = area.querySelector(":scope > *")
@@ -57,10 +66,12 @@ export class Carousel{
     window.addEventListener("resize" , this.resize.bind(this))
   }
 
+  // [イベント] カルーセルのスクリール処理
   scroll(e){
     this.set_status(e.target)
   }
 
+  // フォーカスアイテムの選択（中心のアイテム）
   set_status(figure){
     if(!figure){return}
     const area = figure.closest(this.selector)
@@ -78,9 +89,12 @@ export class Carousel{
     }
   }
 
+  // スクロール終了イベント
   scroll_end(e){
     this.set_loop(e.target)
   }
+
+  // 無限ループ処理
   set_loop(figure){
     if(!figure){return}
     const elms = figure.querySelectorAll(":scope > *")
@@ -96,19 +110,23 @@ export class Carousel{
     }
   }
 
+  // 左（先頭）に、最後尾からアイテムを移動
   item_end2start(figure, end_elm, start_elm){
     figure.insertBefore(end_elm, start_elm)
     figure.scrollLeft += end_elm.offsetWidth / 2
   }
 
+  // 最後尾に、先頭からアイテムを移動
   item_start2end(figure, start_elm){
     figure.appendChild(start_elm)
   }
 
+  // 画面リサイズ時の処理
   resize(){
     this.init()
   }
 
+  // 設定完了処理(.promise.then()で処理追加が可能)
   finish(){
     this.resolve()
   }
