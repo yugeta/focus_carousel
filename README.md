@@ -20,6 +20,7 @@ Author : Yugeta.Koji
 - 無限ループのON/OFF
 - ページネーションの追加（予定）
 - 横移動ボタンの設置（予定）
+- JSを All in One にした方が、サイトへの導入がしやすいかも。
 
 
 # Howto Build
@@ -40,6 +41,9 @@ Author : Yugeta.Koji
   - 無限ループのON/OFF
   - Focus以外のボカシ強度 : filter:blur(**)
   
+
+# Demo
+https://yugeta.github.io/focus_carousel/
 
 
 # Update
