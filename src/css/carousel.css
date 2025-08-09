@@ -6,7 +6,7 @@
 /* Carousel */
 .carousel{
   width:100%;
-  height:500px;
+  height:600px;
   position:relative;
   padding:0;
 }
@@ -14,7 +14,7 @@
   width:100%;
   height:100%;
   display:flex;
-  gap:10px;
+  gap:0px;
   overflow-x:scroll;
   position:relative;
   border-radius:8px;
@@ -22,20 +22,124 @@
   padding:100px 0;
 }
 .carousel figure .item{
-  width:400px;
+  --size : 400px;
+  width  : var(--size);
+  min-width  : var(--size);
+  height : var(--size);
+  /* width:400px;
   min-width:400px;
   max-width:100%;
-  height:100%;
+  height:100%; */
   flex:1;
-  position:relative;
+  /* position:relative; */
   z-index:-1;
+  
   
 }
 .carousel figure .item > *{
+  position:absolute;
   width:100%;
   height:100%;
-  box-shadow:4px 4px 10px rgba(0,0,0,0.5);
+  
+  padding:0;
+  margin:0;
+
+  position:relative;
+  /* clip-path: polygon(25% 5%, 0 50%, 25% 95%, 75% 95%, 100% 50%, 75% 5%); */
 }
+
+
+.carousel figure .item > *.hex{
+
+}
+
+.carousel figure .item > *.hex *{
+  position:absolute;
+  
+  clip-path: polygon(25% 5%, 0 50%, 25% 95%, 75% 95%, 100% 50%, 75% 5%);
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+}
+
+.carousel figure .item > *.hex p{
+  background-color:#DDF;
+  color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0;
+  padding:0;
+}
+
+.carousel figure .item > *.hex.large *{
+  width:60%;
+  height:60%;
+}
+.carousel figure .item > *.hex.near .left-top{
+  top:50%;
+  left:50%;
+  transform:translate(
+    calc(-50% - 37.5%),
+    calc(-50% - 22.5%)
+  );
+}
+.carousel figure .item > *.hex.near .right-bottom{
+  top:50%;
+  left:50%;
+  transform:translate(
+    calc(-50% + 37.5%),
+    calc(-50% + 22.5%)
+  );
+}
+
+.carousel figure .item > *.hex.small *{
+  width:40%;
+  height:40%;
+}
+
+.carousel figure .item > *.hex.near .left-top{
+  top:50%;
+  left:50%;
+  transform:translate(
+    calc(-50% - 37.5%),
+    calc(-50% - 22.5%)
+  );
+}
+.carousel figure .item > *.hex.near .right-bottom{
+  top:50%;
+  left:50%;
+  transform:translate(
+    calc(-50% + 37.5%),
+    calc(-50% + 22.5%)
+  );
+}
+
+
+.carousel figure .item > *.hex.away .left-top{
+  top:30%;
+  left:50%;
+  transform:translate(
+    calc(-50% - 40%),
+    calc(-50% - 0%)
+  );
+}
+.carousel figure .item > *.hex.away .right-bottom{
+  top:30%;
+  left:50%;
+  transform:translate(
+    calc(-50% + 40%),
+    calc(-50% + 50%)
+  );
+}
+.carousel figure .item > *.hex.away .left-bottom{
+  top:30%;
+  left:50%;
+  transform:translate(
+    calc(-50% - 40%),
+    calc(+50% + 0%)
+  );
+}
+
+
 
 /* scroll-bar hidden */
 .carousel figure{
@@ -63,10 +167,8 @@
   }
 }
 
-
-
 .carousel{
-  --perspective-size : 1500px;
+  /* --perspective-size : 1500px; */
 }
 
 .carousel figure .item{
@@ -74,22 +176,26 @@
   perspective-origin: center;
   --z   : 0;
   --rot : 0;
-  --scale:1.0;
+  --min-scale:1.0;
+  --max-scale:1.8;
+  --blur: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .carousel figure .item > *{
   transition-property: transform,filter,-ms-filter;
   transition-duration: 0.5s;
-  transform:scale(var(--scale));
-  -ms-filter: blur(5px);
-  filter: blur(5px);
+  transform:scale(var(--min-scale));
+  -ms-filter: blur(var(--blur));
+  filter: blur(var(--blur));
 }
 
 .carousel figure .item[data-status="active"]{
   z-index:2;
 }
 .carousel figure .item[data-status="active"] > *{
-  transform:scale(1.5);
+  transform:scale(var(--max-scale));
   -ms-filter: blur(0px);
   filter: blur(0px);
 }
