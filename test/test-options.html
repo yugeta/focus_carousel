@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>オプション機能テスト - Focus Carousel</title>
+  <link rel="stylesheet" href="../src/css/style.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    h2 { color: #555; margin-top: 40px; }
+    .test-section {
+      margin: 40px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .test-console {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .test-console .success { color: #4ec9b0; }
+    .test-console .error { color: #f48771; }
+    .test-console .info { color: #569cd6; }
+    .description {
+      background: #fff;
+      padding: 15px;
+      border-left: 4px solid #007bff;
+      margin: 10px 0;
+    }
+    .option-display {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Focus Carousel - オプション機能テスト</h1>
+
+<div class="description">
+  <strong>テスト内容:</strong>
+  <ul>
+    <li>無限ループのON/OFF</li>
+    <li>最小アイテム数の制限</li>
+    <li>カスタムオプションの適用</li>
+  </ul>
+</div>
+
+<div class="test-section">
+  <h2>テスト1: 無限ループ有効（デフォルト）</h2>
+  <div class="option-display">
+    infiniteLoop: true, minItemsForLoop: 3
+  </div>
+  <p>端までスクロールすると無限ループします。</p>
+  
+  <div class="carousel" role="region" aria-label="無限ループ有効" id="carousel1">
+    <figure>
+      <div class="item" role="group"><img src="../src/img/001.jpg" alt="画像 1"></div>
+      <div class="item" role="group"><img src="../src/img/002.jpg" alt="画像 2"></div>
+      <div class="item" role="group"><img src="../src/img/003.jpg" alt="画像 3"></div>
+      <div class="item" role="group"><img src="../src/img/004.jpg" alt="画像 4"></div>
+      <div class="item" role="group"><img src="../src/img/005.jpg" alt="画像 5"></div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-section">
+  <h2>テスト2: 無限ループ無効</h2>
+  <div class="option-display">
+    infiniteLoop: false
+  </div>
+  <p>端までスクロールしても無限ループしません。</p>
+  
+  <div class="carousel" role="region" aria-label="無限ループ無効" id="carousel2">
+    <figure>
+      <div class="item" role="group"><img src="../src/img/006.jpg" alt="画像 6"></div>
+      <div class="item" role="group"><img src="../src/img/007.jpg" alt="画像 7"></div>
+      <div class="item" role="group"><img src="../src/img/008.jpg" alt="画像 8"></div>
+      <div class="item" role="group"><img src="../src/img/009.jpg" alt="画像 9"></div>
+      <div class="item" role="group"><img src="../src/img/010.jpg" alt="画像 10"></div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-section">
+  <h2>テスト3: アイテム数が少ない（2個）</h2>
+  <div class="option-display">
+    infiniteLoop: true, minItemsForLoop: 3
+  </div>
+  <p>アイテム数が minItemsForLoop 未満のため、無限ループは動作しません。</p>
+  
+  <div class="carousel" role="region" aria-label="少数アイテム" id="carousel3">
+    <figure>
+      <div class="item" role="group"><img src="../src/img/001.jpg" alt="画像 1"></div>
+      <div class="item" role="group"><img src="../src/img/002.jpg" alt="画像 2"></div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-console" id="console"></div>
+
+<script type="module">
+  import { Carousel } from "../src/js/carousel.js"
+  
+  const consoleEl = document.getElementById('console')
+  
+  function log(message, type = 'info') {
+    const time = new Date().toLocaleTimeString()
+    const span = document.createElement('div')
+    span.className = type
+    span.textContent = `[${time}] ${message}`
+    consoleEl.appendChild(span)
+    consoleEl.scrollTop = consoleEl.scrollHeight
+  }
+  
+  function runTests() {
+    log('=== オプション機能テスト開始 ===', 'info')
+    
+    try {
+      // カルーセル1: デフォルト設定（無限ループ有効）
+      const carousel1 = new Carousel()
+      log('✓ カルーセル1（デフォルト設定）初期化成功', 'success')
+      log(`  infiniteLoop: ${carousel1.options.infiniteLoop}`, 'info')
+      log(`  minItemsForLoop: ${carousel1.options.minItemsForLoop}`, 'info')
+      
+      if (carousel1.options.infiniteLoop === true) {
+        log('✓ 無限ループが有効です', 'success')
+      } else {
+        log('✗ 無限ループの設定が不正です', 'error')
+      }
+      
+      if (carousel1.options.minItemsForLoop === 3) {
+        log('✓ 最小アイテム数が正しく設定されています', 'success')
+      } else {
+        log('✗ 最小アイテム数の設定が不正です', 'error')
+      }
+      
+      log('=== オプション機能テスト完了 ===', 'info')
+      log('ℹ 手動で以下を確認してください:', 'info')
+      log('  - カルーセル1: 端までスクロールすると無限ループする', 'info')
+      log('  - カルーセル2: 端で停止する（無限ループしない）', 'info')
+      log('  - カルーセル3: アイテムが少ないため無限ループしない', 'info')
+      
+    } catch (error) {
+      log(`✗ エラーが発生しました: ${error.message}`, 'error')
+      console.error(error)
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runTests)
+  } else {
+    runTests()
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Focus Carousel - テストスイート</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .test-card {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      display: block;
+    }
+    .test-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border-color: #667eea;
+    }
+    .test-card h2 {
+      color: #667eea;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .test-card p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .test-card .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .info-box h3 {
+      color: #1976D2;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .info-box p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎠 Focus Carousel</h1>
+  <p class="subtitle">テストスイート - すべてのテストを実行できます</p>
+  
+  <div class="info-box">
+    <h3>テストの実行方法</h3>
+    <p>
+      各テストカードをクリックして、個別のテストページを開いてください。<br>
+      各テストページには自動チェックと手動確認項目が含まれています。
+    </p>
+  </div>
+  
+  <div class="test-grid">
+    <a href="test-basic.html" class="test-card">
+      <div class="icon">🔧</div>
+      <h2>基本機能テスト</h2>
+      <p>カルーセルの初期化、スクロール動作、フォーカスエフェクト、複数カルーセルの同時動作を確認します。</p>
+    </a>
+    
+    <a href="test-options.html" class="test-card">
+      <div class="icon">⚙️</div>
+      <h2>オプション機能テスト</h2>
+      <p>無限ループのON/OFF、最小アイテム数の制限、カスタムオプションの適用を確認します。</p>
+    </a>
+    
+    <a href="test-accessibility.html" class="test-card">
+      <div class="icon">♿</div>
+      <h2>アクセシビリティテスト</h2>
+      <p>ARIA属性、キーボード操作、フォーカス管理、スクリーンリーダー対応を確認します。</p>
+    </a>
+    
+    <a href="test-edge-cases.html" class="test-card">
+      <div class="icon">⚠️</div>
+      <h2>エッジケーステスト</h2>
+      <p>アイテム数が極端に少ない/多い場合、画像なしコンテンツなど、特殊なケースを確認します。</p>
+    </a>
+    
+    <a href="test-responsive.html" class="test-card">
+      <div class="icon">📱</div>
+      <h2>レスポンシブテスト</h2>
+      <p>画面リサイズ時の動作、異なるビューポートサイズでの表示、中心位置の再計算を確認します。</p>
+    </a>
+  </div>
+  
+  <div class="info-box" style="margin-top: 40px;">
+    <h3>📖 詳細なドキュメント</h3>
+    <p>
+      テストの詳細な説明や実行方法については、<a href="README.md" style="color: #2196F3;">test/README.md</a> を参照してください。
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

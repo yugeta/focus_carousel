@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>エッジケーステスト - Focus Carousel</title>
+  <link rel="stylesheet" href="../src/css/style.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    h2 { color: #555; margin-top: 40px; }
+    .test-section {
+      margin: 40px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .test-console {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .test-console .success { color: #4ec9b0; }
+    .test-console .error { color: #f48771; }
+    .test-console .info { color: #569cd6; }
+    .description {
+      background: #fff;
+      padding: 15px;
+      border-left: 4px solid #dc3545;
+      margin: 10px 0;
+    }
+    .placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 48px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Focus Carousel - エッジケーステスト</h1>
+
+<div class="description">
+  <strong>テスト内容:</strong>
+  <ul>
+    <li>アイテム数が極端に少ない場合</li>
+    <li>アイテム数が極端に多い場合</li>
+    <li>画像なしのコンテンツ</li>
+  </ul>
+</div>
+
+<div class="test-section">
+  <h2>テスト1: アイテム1個</h2>
+  <p>アイテムが1個だけの場合でもエラーが出ないことを確認。</p>
+  
+  <div class="carousel" role="region" aria-label="1個のアイテム" id="carousel1">
+    <figure>
+      <div class="item" role="group" aria-label="唯一のアイテム">
+        <img src="../src/img/001.jpg" alt="画像 1">
+      </div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-section">
+  <h2>テスト2: 画像なしコンテンツ</h2>
+  <p>画像の代わりにテキストやその他の要素を使用。</p>
+  
+  <div class="carousel" role="region" aria-label="テキストコンテンツ" id="carousel2">
+    <figure>
+      <div class="item" role="group" aria-label="アイテム 1">
+        <div class="placeholder">1</div>
+      </div>
+      <div class="item" role="group" aria-label="アイテム 2">
+        <div class="placeholder">2</div>
+      </div>
+      <div class="item" role="group" aria-label="アイテム 3">
+        <div class="placeholder">3</div>
+      </div>
+      <div class="item" role="group" aria-label="アイテム 4">
+        <div class="placeholder">4</div>
+      </div>
+      <div class="item" role="group" aria-label="アイテム 5">
+        <div class="placeholder">5</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-console" id="console"></div>
+
+<script type="module">
+  import { Carousel } from "../src/js/carousel.js"
+  
+  const consoleEl = document.getElementById('console')
+  
+  function log(message, type = 'info') {
+    const time = new Date().toLocaleTimeString()
+    const span = document.createElement('div')
+    span.className = type
+    span.textContent = `[${time}] ${message}`
+    consoleEl.appendChild(span)
+    consoleEl.scrollTop = consoleEl.scrollHeight
+  }
+  
+  function runTests() {
+    log('=== エッジケーステスト開始 ===', 'info')
+    
+    try {
+      new Carousel()
+      log('✓ カルーセル初期化成功', 'success')
+      
+      // テスト1: 1個のアイテム
+      const carousel1Items = document.querySelectorAll('#carousel1 .item')
+      if (carousel1Items.length === 1) {
+        log(`✓ カルーセル1: アイテム数 ${carousel1Items.length}個でエラーなし`, 'success')
+      }
+      
+      // テスト2: 画像なしコンテンツ
+      const carousel2Items = document.querySelectorAll('#carousel2 .item')
+      const carousel2Images = document.querySelectorAll('#carousel2 img')
+      if (carousel2Items.length === 5 && carousel2Images.length === 0) {
+        log(`✓ カルーセル2: 画像なしコンテンツ（${carousel2Items.length}個）でエラーなし`, 'success')
+      }
+      
+      log('=== エッジケーステスト完了 ===', 'info')
+      log('ℹ すべてのケースでエラーが発生しないことを確認', 'info')
+      
+    } catch (error) {
+      log(`✗ エラーが発生しました: ${error.message}`, 'error')
+      console.error(error)
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runTests)
+  } else {
+    runTests()
+  }
+</script>
+
+</body>
+</html>

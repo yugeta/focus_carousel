@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>基本機能テスト - Focus Carousel</title>
+  <link rel="stylesheet" href="../src/css/style.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #555;
+      margin-top: 40px;
+    }
+    .test-section {
+      margin: 40px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .test-console {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .test-console .success { color: #4ec9b0; }
+    .test-console .error { color: #f48771; }
+    .test-console .info { color: #569cd6; }
+    .description {
+      background: #fff;
+      padding: 15px;
+      border-left: 4px solid #007bff;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Focus Carousel - 基本機能テスト</h1>
+
+<div class="description">
+  <strong>テスト内容:</strong>
+  <ul>
+    <li>カルーセルの初期化</li>
+    <li>スクロール動作とフォーカスエフェクト</li>
+    <li>無限ループ機能</li>
+    <li>複数カルーセルの同時動作</li>
+  </ul>
+</div>
+
+<div class="test-section">
+  <h2>テスト1: 標準カルーセル（10アイテム）</h2>
+  <p>マウスまたはタッチでスクロールして、中央のアイテムがフォーカスされることを確認してください。</p>
+  
+  <div class="carousel" role="region" aria-label="テストカルーセル1" id="carousel1">
+    <figure>
+      <div class="item" role="group" aria-label="アイテム 1">
+        <img src="../src/img/001.jpg" alt="画像 1">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 2">
+        <img src="../src/img/002.jpg" alt="画像 2">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 3">
+        <img src="../src/img/003.jpg" alt="画像 3">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 4">
+        <img src="../src/img/004.jpg" alt="画像 4">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 5">
+        <img src="../src/img/005.jpg" alt="画像 5">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 6">
+        <img src="../src/img/006.jpg" alt="画像 6">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 7">
+        <img src="../src/img/007.jpg" alt="画像 7">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 8">
+        <img src="../src/img/008.jpg" alt="画像 8">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 9">
+        <img src="../src/img/009.jpg" alt="画像 9">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 10">
+        <img src="../src/img/010.jpg" alt="画像 10">
+      </div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-section">
+  <h2>テスト2: 複数カルーセル（同時動作）</h2>
+  <p>2つのカルーセルが独立して動作することを確認してください。</p>
+  
+  <div class="carousel" role="region" aria-label="テストカルーセル2" id="carousel2">
+    <figure>
+      <div class="item" role="group" aria-label="アイテム 1">
+        <img src="../src/img/001.jpg" alt="画像 1">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 2">
+        <img src="../src/img/002.jpg" alt="画像 2">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 3">
+        <img src="../src/img/003.jpg" alt="画像 3">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 4">
+        <img src="../src/img/004.jpg" alt="画像 4">
+      </div>
+      <div class="item" role="group" aria-label="アイテム 5">
+        <img src="../src/img/005.jpg" alt="画像 5">
+      </div>
+    </figure>
+  </div>
+</div>
+
+<div class="test-console" id="console"></div>
+
+<script type="module">
+  import { Carousel } from "../src/js/carousel.js"
+  
+  const consoleEl = document.getElementById('console')
+  
+  function log(message, type = 'info') {
+    const time = new Date().toLocaleTimeString()
+    const span = document.createElement('div')
+    span.className = type
+    span.textContent = `[${time}] ${message}`
+    consoleEl.appendChild(span)
+    consoleEl.scrollTop = consoleEl.scrollHeight
+  }
+  
+  function runTests() {
+    log('=== 基本機能テスト開始 ===', 'info')
+    
+    // テスト1: カルーセルの初期化
+    try {
+      const carousel = new Carousel()
+      log('✓ カルーセルの初期化成功', 'success')
+      
+      // カルーセル要素の存在確認
+      const carousels = document.querySelectorAll('.carousel')
+      if (carousels.length === 2) {
+        log(`✓ カルーセル要素が${carousels.length}個検出されました`, 'success')
+      } else {
+        log(`✗ カルーセル要素の数が不正です（期待: 2, 実際: ${carousels.length}）`, 'error')
+      }
+      
+      // data-uuid属性の確認
+      let hasUuid = true
+      carousels.forEach((el, index) => {
+        if (!el.hasAttribute('data-uuid')) {
+          log(`✗ カルーセル${index + 1}にdata-uuid属性がありません`, 'error')
+          hasUuid = false
+        }
+      })
+      if (hasUuid) {
+        log('✓ すべてのカルーセルにdata-uuid属性が設定されています', 'success')
+      }
+      
+      // アイテムの確認
+      const carousel1Items = document.querySelectorAll('#carousel1 .item')
+      if (carousel1Items.length === 10) {
+        log(`✓ カルーセル1のアイテム数: ${carousel1Items.length}`, 'success')
+      } else {
+        log(`✗ カルーセル1のアイテム数が不正です（期待: 10, 実際: ${carousel1Items.length}）`, 'error')
+      }
+      
+      const carousel2Items = document.querySelectorAll('#carousel2 .item')
+      if (carousel2Items.length === 5) {
+        log(`✓ カルーセル2のアイテム数: ${carousel2Items.length}`, 'success')
+      } else {
+        log(`✗ カルーセル2のアイテム数が不正です（期待: 5, 実際: ${carousel2Items.length}）`, 'error')
+      }
+      
+      // ARIA属性の確認
+      let ariaValid = true
+      carousels.forEach((carousel, index) => {
+        if (!carousel.hasAttribute('role') || carousel.getAttribute('role') !== 'region') {
+          log(`✗ カルーセル${index + 1}のrole属性が不正です`, 'error')
+          ariaValid = false
+        }
+        if (!carousel.hasAttribute('aria-label')) {
+          log(`✗ カルーセル${index + 1}にaria-label属性がありません`, 'error')
+          ariaValid = false
+        }
+      })
+      if (ariaValid) {
+        log('✓ ARIA属性が正しく設定されています', 'success')
+      }
+      
+      // tabindex属性の確認
+      const figures = document.querySelectorAll('.carousel figure')
+      let tabindexValid = true
+      figures.forEach((figure, index) => {
+        if (figure.getAttribute('tabindex') !== '0') {
+          log(`✗ figure要素${index + 1}のtabindex属性が不正です`, 'error')
+          tabindexValid = false
+        }
+      })
+      if (tabindexValid) {
+        log('✓ すべてのfigure要素にtabindex="0"が設定されています', 'success')
+      }
+      
+      // スクロールイベントのテスト
+      setTimeout(() => {
+        log('ℹ スクロールテストを実行中...', 'info')
+        const figure1 = document.querySelector('#carousel1 figure')
+        figure1.scrollLeft = 400
+        
+        setTimeout(() => {
+          const activeItems = document.querySelectorAll('#carousel1 .item[data-status="active"]')
+          if (activeItems.length > 0) {
+            log(`✓ スクロール後、${activeItems.length}個のアイテムがアクティブになりました`, 'success')
+            
+            // aria-current属性の確認
+            if (activeItems[0].hasAttribute('aria-current')) {
+              log('✓ アクティブアイテムにaria-current属性が設定されています', 'success')
+            } else {
+              log('✗ アクティブアイテムにaria-current属性がありません', 'error')
+            }
+          } else {
+            log('✗ スクロール後、アクティブなアイテムが見つかりません', 'error')
+          }
+          
+          log('=== 基本機能テスト完了 ===', 'info')
+          log('ℹ 手動で以下を確認してください:', 'info')
+          log('  - マウス/タッチでスクロールできるか', 'info')
+          log('  - 中央のアイテムが拡大＋ぼかし解除されるか', 'info')
+          log('  - 端までスクロールすると無限ループするか', 'info')
+          log('  - Tabキーでフォーカスできるか', 'info')
+          log('  - 矢印キーでスクロールできるか', 'info')
+        }, 1000)
+      }, 500)
+      
+    } catch (error) {
+      log(`✗ エラーが発生しました: ${error.message}`, 'error')
+      console.error(error)
+    }
+  }
+  
+  // DOMContentLoaded後にテスト実行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runTests)
+  } else {
+    runTests()
+  }
+</script>
+
+</body>
+</html>

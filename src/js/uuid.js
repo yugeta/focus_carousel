@@ -21,10 +21,10 @@ export class Uuid{
   // hash-idの生成
   make(){
     const HEXOCTETS = Object.freeze( [ ...Array( 0x100 ) ].map( ( e, i ) => i.toString( 0x10 ).padStart( 2, "0" ).toUpperCase() ) );
-    const VARSION = 0x40;
+    const VERSION = 0x40;
     const VARIANT = 0x80;
     let bytes = null;
-    if(crypto){
+    if(typeof crypto !== 'undefined' && crypto.getRandomValues){
       bytes = crypto.getRandomValues(new Uint8Array(16));
     }
     else{
@@ -42,7 +42,7 @@ export class Uuid{
           + HEXOCTETS[ bytes[ 4] ]
           + HEXOCTETS[ bytes[ 5] ] 
           + "-"
-          + HEXOCTETS[ bytes[ 6] & 0x0f | VARSION ]
+          + HEXOCTETS[ bytes[ 6] & 0x0f | VERSION ]
           + HEXOCTETS[ bytes[ 7] ] 
           + "-"
           + HEXOCTETS[ bytes[ 8] & 0x3f | VARIANT ]

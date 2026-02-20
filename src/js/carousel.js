@@ -7,15 +7,19 @@ import { Uuid } from "./uuid.js"
 export class Carousel{
   selector = ".carousel"
   areas = []
+  
+  // Configuration options
+  options = {
+    infiniteLoop: true,
+    minItemsForLoop: 3,
+    blurAmount: 5,
+    focusScale: 1.5
+  }
 
-  constructor(){
-    this.promise = new Promise((resolve, reject)=>{
-      this.resolve = resolve
-      this.reject  = reject
-      this.init()
-      this.set_event()
-      this.finish()
-    })
+  constructor(options = {}){
+    this.options = { ...this.options, ...options }
+    this.init()
+    this.set_event()
   }
 
   // 1ページ内のカルーセル領域の取得（エリア一覧）
@@ -60,13 +64,49 @@ export class Carousel{
   set_event(){
     for(const area of this.elements){
       const figure = area.querySelector(":scope > *")
-      figure.addEventListener("scroll" , this.scroll.bind(this))
-      figure.addEventListener("scrollend" , this.scroll_end.bind(this))
+      figure.addEventListener("scroll", this.scroll.bind(this))
+      
+      // scrollend のフォールバック
+      if('onscrollend' in window){
+        figure.addEventListener("scrollend", this.scroll_end.bind(this))
+      } else {
+        let scrollTimeout
+        figure.addEventListener("scroll", () => {
+          clearTimeout(scrollTimeout)
+          scrollTimeout = setTimeout(() => this.scroll_end({ target: figure }), 150)
+        })
+      }
+      
+      // キーボード操作のサポート
+      figure.addEventListener("keydown", this.handle_keyboard.bind(this))
+      figure.setAttribute("tabindex", "0")
     }
-    window.addEventListener("resize" , this.resize.bind(this))
+    
+    let resizeTimeout
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => this.resize(), 250)
+    })
+  }
+  
+  // キーボード操作
+  handle_keyboard(e){
+    const figure = e.target
+    const scrollAmount = 400 // 1アイテム分
+    
+    switch(e.key){
+      case "ArrowLeft":
+        e.preventDefault()
+        figure.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
+        break
+      case "ArrowRight":
+        e.preventDefault()
+        figure.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+        break
+    }
   }
 
-  // [イベント] カルーセルのスクリール処理
+  // [イベント] カルーセルのスクロール処理
   scroll(e){
     this.set_status(e.target)
   }
@@ -79,12 +119,17 @@ export class Carousel{
     if(!data){return}
     const items = data.items
     for(const item of items){
-      const center = Math.abs(~~(item.offsetLeft - figure.scrollLeft + (item.offsetWidth / 2)) - data.center)
-      if(center < item.offsetWidth/2){
-        item.setAttribute("data-status" , "active")
+      const itemCenter = item.offsetLeft - figure.scrollLeft + (item.offsetWidth / 2)
+      const center = Math.abs(Math.floor(itemCenter) - data.center)
+      const isActive = center < item.offsetWidth / 2
+      
+      if(isActive){
+        item.setAttribute("data-status", "active")
+        item.setAttribute("aria-current", "true")
       }
       else if(item.hasAttribute("data-status")){
         item.removeAttribute("data-status")
+        item.removeAttribute("aria-current")
       }
     }
   }
@@ -96,8 +141,11 @@ export class Carousel{
 
   // 無限ループ処理
   set_loop(figure){
-    if(!figure){return}
+    if(!figure || !this.options.infiniteLoop){return}
     const elms = figure.querySelectorAll(":scope > *")
+    
+    // アイテム数が少ない場合はループしない
+    if(elms.length < this.options.minItemsForLoop){return}
 
     // left
     if(figure.scrollLeft < elms[0].offsetWidth){
@@ -123,11 +171,11 @@ export class Carousel{
 
   // 画面リサイズ時の処理
   resize(){
-    this.init()
-  }
-
-  // 設定完了処理(.promise.then()で処理追加が可能)
-  finish(){
-    this.resolve()
+    // 中心位置のみ再計算
+    for(const area of this.areas){
+      const rect = area.elm.getBoundingClientRect()
+      area.rect = rect
+      area.center = rect.width / 2
+    }
   }
 }
